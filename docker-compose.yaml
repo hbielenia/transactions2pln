@@ -1,0 +1,27 @@
+services:
+  build:
+    image: hbielenia/pypa-build:1.2-py3.11-bullseye@sha256:9339c61acf52f8a05fd9b9e586a89bf2ea30b23e4207dad77b8fa8794c2d3b57
+    volumes:
+      - ./:/usr/src/app
+    command: python -m build
+  build_exe:
+    image: hbielenia/cx-freeze:7.2-py3.11-windowsservercore-1809@sha256:acd7dd4a17bab639e90c86fe16f537c03f504220f5713cc0b88f7e54543ed96b
+    volumes:
+      - ./:/usr/src/app
+    command: cxfreeze build_exe
+  test:
+    build: ./test
+    image: transactions2pln-test:latest
+    volumes:
+      - ./src:/usr/src/app:ro
+    command: python -m unittest discover -q -b /usr/src/app
+  typecheck:
+    image: hbielenia/mypy:1.11-py3.11-bullseye@sha256:4ffa075473f57467d188d60cc762026a8ba466ee711cf762b33946123cefced4
+    volumes:
+      - ./src:/usr/src/app:ro
+    command: mypy --strict --package transactions2pln
+  lint:
+    image: pipelinecomponents/flake8:0.16.0@sha256:6674fe93841130f36cd49542f5e62a3be7dd031d3fbb8858ecb8b389a9ac6c66
+    volumes:
+      - ./:/app:ro
+    command: flake8

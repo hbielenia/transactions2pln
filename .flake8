@@ -1,0 +1,12 @@
+[flake8]
+extend-ignore =
+	# missing whitespace around bitwise or shift operator
+	# Niepotrzebnie szerokie, szczególnie w type hints.
+	E227
+	# at least two spaces before inline comment
+	# Podświetlanie składni w edytorze kodu dużo lepiej oddziela wizualnie
+	# komentarze inline niż spacje.
+	E261
+	# indentation contains tabs
+	# Tabulatory są w tym programie domyślnymi znakami wcięć.
+	W191

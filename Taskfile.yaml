@@ -1,0 +1,29 @@
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - docker compose run --rm -e SOURCE_DATE_EPOCH={{.COMMIT_TIMESTAMP}} build
+    vars:
+      COMMIT_TIMESTAMP:
+        sh: git cat-file commit HEAD | awk 'NR==2 {print $(NF-1)}'
+  build_exe:
+    cmds:
+      - docker compose run --rm build_exe
+  help:
+    dir: ./src/
+    cmds:
+      - python -m transactions2pln --help
+  run:
+    dir: ./src/
+    cmds:
+      - python -m transactions2pln {{ .CLI_ARGS }}
+  test:
+    cmds:
+      - docker compose run --rm --build test
+  typecheck:
+    cmds:
+      - docker compose run --rm typecheck
+  lint:
+    cmds:
+      - docker compose run --rm lint

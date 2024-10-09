@@ -1,0 +1,47 @@
+[build-system]
+requires = [ "setuptools" ]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "transactions2pln"
+version = "1.0.0"
+description = "Adds PLN values to CSV transactions data."
+readme = "README.rst"
+authors = [
+	{ name = "Hubert Bielenia", email = "hubert.bielenia@gmail.com" },
+]
+requires-python = "~= 3.11"
+keywords = [ "pln", "transactions data" ]
+classifiers = [
+	"Development Status :: 5 - Production/Stable",
+	"Environment :: Console",
+	"Intended Audience :: End Users/Desktop",
+	"License :: OSI Approved :: European Union Public Licence 1.2 (EUPL 1.2)",
+	"Natural Language :: Polish",
+	"Operating System :: Microsoft :: Windows",
+	"Operating System :: POSIX :: Linux",
+	"Programming Language :: Python :: 3.11",
+	"Topic :: Office/Business :: Financial :: Accounting",
+	"Topic :: Office/Business :: Financial :: Investment",
+	"Topic :: Utilities",
+	"Private :: Do Not Upload",
+]
+
+[project.scripts]
+transactions2pln = "transactions2pln.script:run"
+
+[tool.cxfreeze]
+executables = [
+	{ script = "src/transactions2pln/__main__.py", target_name = "transactions2pln" },
+]
+
+[tool.cxfreeze.build_exe]
+includes = ["transactions2pln"]
+include_path = "src"
+
+[tool.mypy]
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+
+[tool.setuptools.packages.find]
+include = ["transactions2pln*"]
+where = ["src"]
