@@ -1,0 +1,87 @@
+name: build
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+      - reopened
+    paths:
+      - 'pyproject.toml'
+      - 'README.rst'
+      - 'src/transactions2pln/**.py'
+      - '.github/workflows/build.yml'
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'pyproject.toml'
+      - 'README.rst'
+      - 'src/transactions2pln/**.py'
+      - '.github/workflows/build.yml'
+jobs:
+  wheel:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Pobranie repozytorium
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # 4.2.1
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Odczytanie czasu utworzenia wersji
+        id: commit
+        run: |-
+          git cat-file commit ${{ github.event.pull_request.head.sha }}
+          timestamp=$(git cat-file commit ${{ github.event.pull_request.head.sha }} | awk 'NR==3 {print $(NF-1)}')
+          echo "timestamp=$timestamp" >> "$GITHUB_OUTPUT"
+      - name: Zbudowanie paczki
+        run: docker compose run --rm --quiet-pull -u $UID -e SOURCE_DATE_EPOCH=${{ steps.commit.outputs.timestamp }} build
+        env:
+          IMAGE_NAME_BUILD: ghcr.io/hbielenia/docker-pypa-build
+      - name: Zapisanie paczki
+        if: ${{ github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') }}
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # 4.4.3
+        with:
+          name: ${{ github.job }}
+          path: dist/transactions2pln-${{ github.ref_name }}-py3-none-any.whl
+          if-no-files-found: error
+          compression-level: '0'
+          overwrite: 'true'
+  exe:
+    runs-on: windows-2019
+    env:
+      IMAGE_NAME_BUILD_EXE: ghcr.io/hbielenia/docker-cx-freeze
+    steps:
+      - name: Pobranie repozytorium
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # 4.2.1
+        with:
+          persist-credentials: false
+      - name: Wykrycie wersji Pythona
+        id: python
+        shell: bash
+        run: >-
+          echo "version=$(
+          docker compose run --rm --quiet-pull build_exe
+          python -c "import sys; print(sys.version_info.major, '.', sys.version_info.minor, sep='')"
+          )" >> "$GITHUB_OUTPUT"
+      - name: Zbudowanie pliku wykonywalnego
+        run: docker compose run --rm --quiet-pull build_exe
+      - name: Zmiana nazwy biblioteki Pythona by uniknąć ostrzeżenia przy uruchamianiu
+        shell: bash
+        run: mv ./build/exe.win-amd64-${{ steps.python.outputs.version }}/python312.dll ./build/exe.win-amd64-${{ steps.python.outputs.version }}/python3.dll
+      - name: Modyfikacja pliku z licencją
+        shell: bash
+        run: |-
+            mv ./build/exe.win-amd64-${{ steps.python.outputs.version }}/frozen_application_license.txt ./build/exe.win-amd64-${{ steps.python.outputs.version }}/license.txt
+            echo '## License for transactions2pln' >> ./build/exe.win-amd64-${{ steps.python.outputs.version }}/license.txt
+            cat LICENCE.txt >> ./build/exe.win-amd64-${{ steps.python.outputs.version }}/license.txt
+            echo '' >> ./build/exe.win-amd64-${{ steps.python.outputs.version }}/license.txt
+      - name: Zapisanie pliku wykonywalnego
+        if: ${{ github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') }}
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # 4.4.3
+        with:
+          name: ${{ github.job }}
+          path: build/exe.win-amd64-${{ steps.python.outputs.version }}/
+          if-no-files-found: error
+          compression-level: '0'
+          overwrite: 'true'

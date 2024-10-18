@@ -3,10 +3,12 @@ version: '3'
 tasks:
   build:
     cmds:
-      - docker compose run --rm -e SOURCE_DATE_EPOCH={{.COMMIT_TIMESTAMP}} build
+      - docker compose run --rm -u {{.USER_ID}} -e SOURCE_DATE_EPOCH={{.COMMIT_TIMESTAMP}} build
     vars:
       COMMIT_TIMESTAMP:
-        sh: git cat-file commit HEAD | awk 'NR==2 {print $(NF-1)}'
+        sh: git cat-file commit HEAD | awk 'NR==3 {print $(NF-1)}'
+      USER_ID:
+        sh: id -u
   build_exe:
     cmds:
       - docker compose run --rm build_exe
