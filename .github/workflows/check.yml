@@ -1,0 +1,41 @@
+name: check
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+      - reopened
+    paths:
+      - '**.py'
+      - './github/workflows/check.yml'
+jobs:
+  tests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Pobranie repozytorium
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # 4.1.7
+        with:
+          persist-credentials: false
+      - name: Przeprowadzenie testów automatycznych
+        run: docker compose run --rm --quiet-pull --build test
+  typing:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Pobranie repozytorium
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # 4.1.7
+        with:
+          persist-credentials: false
+      - name: Analiza statyczna typów danych
+        run: docker compose run --rm --quiet-pull typecheck
+        env:
+          IMAGE_NAME_TYPECHECK: ghcr.io/hbielenia/docker-mypy
+  style:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Pobranie repozytorium
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # 4.1.7
+        with:
+          persist-credentials: false
+      - name: Sprawdzenie stylu kodowania
+        run: docker compose run --rm --quiet-pull lint
