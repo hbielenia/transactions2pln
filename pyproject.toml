@@ -10,7 +10,7 @@ readme = "README.rst"
 authors = [
 	{ name = "Hubert Bielenia", email = "hubert.bielenia@gmail.com" },
 ]
-requires-python = "~= 3.11"
+requires-python = "~= 3.12"
 keywords = [ "pln", "transactions data" ]
 classifiers = [
 	"Development Status :: 5 - Production/Stable",
@@ -20,7 +20,7 @@ classifiers = [
 	"Natural Language :: Polish",
 	"Operating System :: Microsoft :: Windows",
 	"Operating System :: POSIX :: Linux",
-	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3.12",
 	"Topic :: Office/Business :: Financial :: Accounting",
 	"Topic :: Office/Business :: Financial :: Investment",
 	"Topic :: Utilities",

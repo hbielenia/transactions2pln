@@ -17,7 +17,7 @@
 # pozwoleń i ograniczeń w ramach Licencji, należy zapoznać
 # się z treścią licencji.
 
-FROM python:3.11-bullseye@sha256:c927121ba6f075a139438db25b22e0c21df8ecae790958f5f3764c32e3c25834
+FROM python:3.12-bullseye@sha256:4da4396d9fa63e3f2014b56275ed261eba14b9c6ba51883f81341ee170e64103
 WORKDIR /usr/src/app
 RUN apt-get update \
 	&& apt-get install -y locales=2.31-13+deb11u11 \
