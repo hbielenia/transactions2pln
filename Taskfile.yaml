@@ -13,11 +13,11 @@ tasks:
   help:
     dir: ./src/
     cmds:
-      - python -m transactions2pln --help
+      - '{{ default "python3" .PYTHON }} -m transactions2pln --help'
   run:
     dir: ./src/
     cmds:
-      - python -m transactions2pln {{ .CLI_ARGS }}
+      - '{{ default "python3" .PYTHON }} -m transactions2pln {{ .CLI_ARGS }}'
   test:
     cmds:
       - docker compose run --rm --build test
