@@ -20,7 +20,7 @@
 FROM python:3.11-bullseye@sha256:c927121ba6f075a139438db25b22e0c21df8ecae790958f5f3764c32e3c25834
 WORKDIR /usr/src/app
 RUN apt-get update \
-	&& apt-get install -y locales==2.31-13+deb11u10 \
+	&& apt-get install -y locales=2.31-13+deb11u11 \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& localedef -i pl_PL -c -f UTF-8 -A /usr/share/locale/locale.alias pl_PL.UTF-8
 ENV LANG pl_PL.utf8
