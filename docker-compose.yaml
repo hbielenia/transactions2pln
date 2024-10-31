@@ -15,6 +15,12 @@ services:
     volumes:
       - ./src:/usr/src/app:ro
     command: python -m unittest discover -q -b /usr/src/app
+  test_dev:
+    build: ./test
+    image: transactions2pln-test:latest
+    volumes:
+      - ./src:/usr/src/app:ro
+    command: python -W default -m unittest discover -b /usr/src/app
   typecheck:
     image: hbielenia/mypy:1.11-py3.11-bullseye@sha256:4ffa075473f57467d188d60cc762026a8ba466ee711cf762b33946123cefced4
     volumes:

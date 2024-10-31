@@ -21,6 +21,9 @@ tasks:
   test:
     cmds:
       - docker compose run --rm --build test
+  test-dev:
+    cmds:
+      - docker compose run --rm --build test_dev
   typecheck:
     cmds:
       - docker compose run --rm typecheck
