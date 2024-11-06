@@ -1,13 +1,13 @@
 services:
   build:
-    image: hbielenia/pypa-build:1.2-py3.11-bullseye@sha256:9339c61acf52f8a05fd9b9e586a89bf2ea30b23e4207dad77b8fa8794c2d3b57
+    image: ${IMAGE_NAME_BUILD:-hbielenia/pypa-build}:1.2-py3.12-bullseye@sha256:b9e7eb4d96ba6dfd2d7538c11a89e9d7d7870e4be35e4386a4e9ac380640c4e2
     volumes:
       - ./:/usr/src/app
     command: python -m build
   build_exe:
-    image: hbielenia/cx-freeze:7.2-py3.11-windowsservercore-1809@sha256:acd7dd4a17bab639e90c86fe16f537c03f504220f5713cc0b88f7e54543ed96b
+    image: ${IMAGE_NAME_BUILD_EXE:-hbielenia/cx-freeze}:7.2-py3.12-windowsservercore-1809@sha256:23dd6de022d5addd57158ecd27537625b3dd78fded9bea47c64f1b6c1eb9e3fa
     volumes:
-      - ./:/usr/src/app
+      - ./:c:\Users\ContainerUser\SourceCode
     command: cxfreeze build_exe
   test:
     build: ./test
@@ -22,7 +22,7 @@ services:
       - ./src:/usr/src/app:ro
     command: python -W default -m unittest discover -b /usr/src/app
   typecheck:
-    image: hbielenia/mypy:1.11-py3.11-bullseye@sha256:4ffa075473f57467d188d60cc762026a8ba466ee711cf762b33946123cefced4
+    image: ${IMAGE_NAME_TYPECHECK:-hbielenia/mypy}:1.11-py3.12-bullseye@sha256:4381690982101274130aebbd538ab47775b8b13d0e0d53224b27ba2ac8043d40
     volumes:
       - ./src:/usr/src/app:ro
     command: mypy --strict --package transactions2pln
