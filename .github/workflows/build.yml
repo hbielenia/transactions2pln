@@ -31,8 +31,7 @@ jobs:
       - name: Odczytanie czasu utworzenia wersji
         id: commit
         run: |-
-          git cat-file commit ${{ github.event.pull_request.head.sha }}
-          timestamp=$(git cat-file commit ${{ github.event.pull_request.head.sha }} | awk 'NR==3 {print $(NF-1)}')
+          timestamp=$(git cat-file commit ${{ github.event.pull_request.head.sha || github.sha }} | awk 'NR==3 {print $(NF-1)}')
           echo "timestamp=$timestamp" >> "$GITHUB_OUTPUT"
       - name: Zbudowanie paczki
         run: docker compose run --rm --quiet-pull -u $UID -e SOURCE_DATE_EPOCH=${{ steps.commit.outputs.timestamp }} build
