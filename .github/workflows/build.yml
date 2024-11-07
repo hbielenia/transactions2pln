@@ -69,6 +69,7 @@ jobs:
         shell: bash
         run: mv ./build/exe.win-amd64-${{ steps.python.outputs.version }}/python312.dll ./build/exe.win-amd64-${{ steps.python.outputs.version }}/python3.dll
       - name: Modyfikacja pliku z licencją
+        if: ${{ github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') }}
         shell: bash
         run: |-
             mv ./build/exe.win-amd64-${{ steps.python.outputs.version }}/frozen_application_license.txt ./build/exe.win-amd64-${{ steps.python.outputs.version }}/license.txt
