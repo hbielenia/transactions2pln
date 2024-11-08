@@ -67,7 +67,7 @@ jobs:
         run: docker compose run --rm --quiet-pull build_exe
       - name: Zmiana nazwy biblioteki Pythona by uniknąć ostrzeżenia przy uruchamianiu
         shell: bash
-        run: mv ./build/exe.win-amd64-${{ steps.python.outputs.version }}/python312.dll ./build/exe.win-amd64-${{ steps.python.outputs.version }}/python3.dll
+        run: mv ./build/exe.win-amd64-${{ steps.python.outputs.version }}/python3*.dll ./build/exe.win-amd64-${{ steps.python.outputs.version }}/python3.dll
       - name: Modyfikacja pliku z licencją
         if: ${{ github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') }}
         shell: bash
