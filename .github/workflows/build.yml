@@ -12,6 +12,8 @@ on:
       - 'src/transactions2pln/**.py'
       - '.github/workflows/build.yml'
   push:
+    tags:
+      - '*'
     branches:
       - 'master'
     paths:
