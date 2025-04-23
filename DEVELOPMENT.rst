@@ -10,7 +10,7 @@ Praca nad ``transactions2pln`` wymaga następujących programów:
 
 - Docker_,
 - Git_,
-- Python_ w wersji 3.11.
+- Python_ w wersji 3.12.
 
 Ułatwieniem w pracy nad ``transactions2pln`` jest też program Task_,
 ale nie jest on niezbędny.
@@ -138,3 +138,4 @@ wszystkie testy automatyczne.
 .. _PEP-526: https://peps.python.org/pep-0526/
 .. _PEP-8: https://peps.python.org/pep-0008/
 .. _pull requests: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
+
