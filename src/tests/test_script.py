@@ -35,7 +35,7 @@ import typing
 from unittest import TestCase
 from unittest.mock import MagicMock, Mock, mock_open, patch
 
-from transactions2pln import script
+from transactions2pln import exceptions as exc, script
 
 
 class TemporaryDirectoryMockMixin:
@@ -340,6 +340,24 @@ class Transactions2PLNTestCase(BaseScriptTestCase):
 				'334678,Zenith Solutions,ZEN,2023/05/11,CHF,241.71,"4,1414","1001,02"\r\n',
 			)),
 		)
+
+	@patch('transactions2pln.utils.urlretrieve')
+	def test_currency_first_column(self, _) -> None:
+		"""Testuje obsługę przypadku, gdzie kolumna z walutą jest oznaczona
+		jako pierwsza."""
+		args_mock: Mock = self.get_args_mock()
+		args_mock.currency = '0'
+
+		# Po spatchowaniu, open() zwraca zawsze zawartość pliku data/nbp_table.csv
+		with patch('builtins.open', self.mock_open):
+			# W danych testowych kolumna nie jest pierwsza, więc spodziewamy
+			# się błędu.
+			self.assertRaises(
+				exc.RowProcessingError,
+				script.transactions2pln,
+				args_mock,
+				self._tmpdir,
+			)
 
 	@patch('transactions2pln.utils.urlretrieve')
 	def test_date_column_as_letter(self, _) -> None:
