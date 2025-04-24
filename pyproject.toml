@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "transactions2pln"
-version = "1.0.0"
+version = "1.0.1"
 description = "Adds PLN values to CSV transactions data."
 readme = "README.rst"
 authors = [
