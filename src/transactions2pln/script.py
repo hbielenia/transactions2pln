@@ -250,7 +250,7 @@ def transactions2pln(
 		try:
 			currency_column_idx: int|None = utils.get_column_index(
 				args.currency, labels)
-			assert currency_column_idx
+			assert currency_column_idx is not None
 		except (AssertionError, ValueError) as err:
 			# Jeżeli nie możemy uzyskać indeksu, zwracamy błąd.
 			raise exc.ColumnParameterError('currency', args.currency) from err
